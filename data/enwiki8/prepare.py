@@ -6,21 +6,23 @@ encoder and decoder and some other related info.
 """
 import os
 import pickle
-# import requests
+import requests, zipfile, io
 import numpy as np
 
 # download the tiny shakespeare dataset
 input_file_path = os.path.join(os.path.dirname(__file__), 'input.txt')
-# if not os.path.exists(input_file_path):
-#     data_url = 'https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt'
-#     with open(input_file_path, 'w') as f:
-#         f.write(requests.get(data_url).text)
+if not os.path.exists(input_file_path):
+    data_url = 'https://mattmahoney.net/dc/enwik8.zip'
+    r = requests.get(data_url)
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    z.extractall(os.path.dirname(__file__))
+    unzip_file_path = os.path.join(os.path.dirname(__file__), 'enwik8')
+    os.rename(unzip_file_path, input_file_path)
 
 with open(input_file_path, 'r', encoding="utf-8") as f:
     data = f.read()
 print(f"length of dataset in characters: {len(data):,}")
 
-# ここでデータを正規化する
 stop_num = 100
 new_data = ""
 for i in range(len(data)):
