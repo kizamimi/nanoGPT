@@ -11,7 +11,7 @@ class T12(GPT):
         self.lm_heads = nn.ModuleList([nn.Linear(config.n_embd, config.vocab_size, bias=False) \
                         for _ in range(config.n_layer*2)])
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None, time_step=None):
         device = idx.device
         b, t = idx.size()
         assert t <= self.config.block_size, f"Cannot forward sequence of length {t}, block size is only {self.config.block_size}"
